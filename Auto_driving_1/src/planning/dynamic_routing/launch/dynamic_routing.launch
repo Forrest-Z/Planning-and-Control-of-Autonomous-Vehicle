@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 其他launch文件传入的参数 -->
+    <arg name="is_planner"/>
+    <arg name="is_lateral_optimization"/>
+    <arg name="is_change_lane"/>
+
+    <!-- 模拟动态障碍物的加载文件，这些都是录好的轨迹点，播放这个文件就可以实现障碍物移动 -->
+    <param name="obstacle_test_path" value="$(find dynamic_routing)/obstacle_files"/>
+    <!-- 加载存储的其他参考线数据 -->
+    <param name="referenceline_path" value="$(find dynamic_routing)/other_referenceline_files"/>
+    <!-- yaml文件 -->
+    <param name="yaml_path" value="$(find dynamic_routing)/config"/>
+
+    <!-- 规划算法选择 -->
+    <param name="use_what_planner"  value="$(arg is_planner)"/>
+    <!-- 变道决策是否开启 -->
+    <param name="change_lane"  value="$(arg is_change_lane)"/>
+    <!-- 是否使用二次规划，选择了lattice规划，选择这个才有效果 -->
+    <param name="use_lateral_optimization"  value="$(arg is_lateral_optimization)"/>
+
+    <!-- 在frenet规划下的参数设置，lattice规划不用这些 -->
+    <!-- COLLISION_CHECK_THRESHOLD 距离障碍物的最短距离 -->
+    <param name="COLLISION_CHECK_THRESHOLD" type="double" value="2" />
+    <!-- 调整轨迹的长度 -->
+    <param name="MaxT" type="double" value="11" />
+    <param name="MinT" type="double" value="9" />
+    
+    <!-- 打开 Hybrid_a_star 的测试图 -->
+    <!-- mapserver提供了一个ROS节点，该节点通过一个ROS Service来提供地图数据 -->
+	<node name="map_server" pkg="map_server" type="map_server" args="$(find dynamic_routing)/maps/map.yaml" >
+		<param name="frame_id" value="map" />
+	</node>
+ 
+    <!--Open palnner的launch参数，顺便加载dynamic节点 -->
+    <include file="$(find dynamic_routing)/launch/op_common_params.launch" />
+
+</launch> 

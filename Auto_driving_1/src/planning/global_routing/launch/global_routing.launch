@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- control: 
+        1 stanley
+        2 lqr
+        3 pure_pursuit
+        4 pid
+    -->
+    <arg name="control"  value="2"/>  
+    <param name="use_what_controller" value="$(arg control)"/>
+
+    <!-- planner: 
+        1是纯frenet规划
+        2是lattice规划
+        3是em_palnner规划
+        4是混合A*规划
+        5是op_planner规划
+    -->
+    <arg name="planner"  value="5"/>    
+    <param name="use_what_planner" value="$(arg planner)"/>
+
+    <!-- 是否使用二次规划，选择了lattice规划，选择这个才有效果 -->
+    <!-- false：lattice 采样规划，true：lattice 二次规划 -->
+    <arg name="use_lateral_optimization" default="false"/>    
+
+    <!-- 是否开启变道决策，变道选择的是Lattce采样规划，其他方法不使用 -->
+    <arg name="change_lane"  default="false"/>    
+
+    <!-- 参考线平滑的方式选择: true:CosThetaSmoother  false:FemPosSmooth-->
+    <arg name="which_smoother" default="false"/>    
+    <param name="which_smoothers" value="$(arg which_smoother)"/>
+
+    <!-- 局部规划 -->
+    <include file="$(find dynamic_routing)/launch/dynamic_routing.launch" >
+        <arg name="is_planner" value="$(arg planner)" />
+        <arg name="is_lateral_optimization" value="$(arg use_lateral_optimization)" />
+        <arg name="is_change_lane" value="$(arg change_lane)" />
+    </include>
+
+    <!-- 全局规划 -->
+    <node pkg="global_routing" type="global_routing_node" name="global_routing" output="screen" />
+ 
+</launch>

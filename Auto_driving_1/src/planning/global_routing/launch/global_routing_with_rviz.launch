@@ -1,0 +1,11 @@
+<launch>
+    <include file="$(find global_routing)/launch/global_routing.launch"/>
+    <!-- 车辆仿真 -->
+    <include file="$(find car_simulation)/launch/car_simulation.launch" />
+    <!-- rviz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find global_routing)/config/planning_demo.rviz"/>
+    
+</launch>
+
+
+

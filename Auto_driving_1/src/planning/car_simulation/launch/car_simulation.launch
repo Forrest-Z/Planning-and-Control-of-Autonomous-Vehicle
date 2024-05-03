@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="car_simulation" type="car_model_node" name="car_simulation" output="screen" />
+</launch>
